@@ -1,0 +1,30 @@
+---
+import { productos } from "../data/productos";
+import ProductCard from "./ProductCard.astro";
+
+const destacados = productos.filter((p) => p.destacado).slice(0, 4);
+---
+
+<section class="bg-secondary-light/50 py-16 lg:py-20">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="reveal flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
+      <div>
+        <span class="section-eyebrow">Favoritos</span>
+        <h2 class="section-title">Vestidos destacados</h2>
+      </div>
+      <a href="/catalogo" class="btn-outline shrink-0">
+        Ver todo el catálogo
+      </a>
+    </div>
+
+    <div class="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        destacados.map((producto, i) => (
+          <div class="reveal" style={`transition-delay: ${i * 70}ms`}>
+            <ProductCard producto={producto} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,110 @@
+---
+import { guiaTallas } from "../data/productos";
+---
+
+<!-- Botón que abre la guía -->
+<button
+  type="button"
+  data-guia-open
+  class="inline-flex items-center gap-2 text-sm font-semibold text-primary underline decoration-secondary decoration-2 underline-offset-4 transition-colors hover:text-primary-dark"
+>
+  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 7l14-4 4 14-14 4z" />
+    <path d="M8 6.5l1 3M13 5l1 3M18 3.5l1 3" />
+  </svg>
+  Guía de talles
+</button>
+
+<!-- Modal -->
+<div
+  data-guia-modal
+  class="fixed inset-0 z-[60] hidden overflow-y-auto"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Guía de talles"
+>
+  <div class="flex min-h-full items-center justify-center p-4">
+    <div data-guia-backdrop class="fixed inset-0 bg-ink/50 backdrop-blur-sm"></div>
+
+    <div class="relative w-full max-w-2xl rounded-3xl bg-neutral p-6 shadow-card sm:p-8">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <span class="section-eyebrow">Guía de talles</span>
+          <h2 class="font-display text-2xl font-bold text-ink">Encontrá el talle ideal</h2>
+        </div>
+        <button
+          type="button"
+          data-guia-close
+          aria-label="Cerrar guía de talles"
+          class="grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink transition-colors hover:bg-secondary/40"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24">
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-6 overflow-hidden rounded-2xl ring-1 ring-secondary/50">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-primary text-white">
+            <tr>
+              <th class="px-4 py-3 font-semibold">Talle</th>
+              <th class="px-4 py-3 font-semibold">Edad</th>
+              <th class="px-4 py-3 font-semibold">Pecho (cm)</th>
+              <th class="px-4 py-3 font-semibold">Cintura (cm)</th>
+              <th class="px-4 py-3 font-semibold">Largo (cm)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-secondary/40 bg-white">
+            {
+              guiaTallas.map((fila) => (
+                <tr class="transition-colors hover:bg-secondary-light/50">
+                  <td class="px-4 py-3 font-display font-bold text-primary">T{fila.talle}</td>
+                  <td class="px-4 py-3 text-ink/80">{fila.edad}</td>
+                  <td class="px-4 py-3 text-ink/80">{fila.pecho}</td>
+                  <td class="px-4 py-3 text-ink/80">{fila.cintura}</td>
+                  <td class="px-4 py-3 text-ink/80">{fila.largo}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-5 rounded-2xl bg-secondary-light/70 p-4 text-sm leading-relaxed text-ink/75">
+        <p class="font-semibold text-ink">💡 Cómo medir</p>
+        <ul class="mt-2 list-disc space-y-1 pl-5">
+          <li>Medí el <strong>contorno del pecho</strong> por la parte más ancha, con cinta métrica sin ajustar.</li>
+          <li>La <strong>cintura</strong> se mide sobre el ombligo, sin apretar.</li>
+          <li>El <strong>largo</strong> va desde el hombro hasta el largo deseado de la falda.</li>
+          <li>Si estás entre dos talles, recomendamos elegir el mayor.</li>
+        </ul>
+      </div>
+
+      <p class="mt-4 text-center text-xs text-ink/50">
+        Medidas orientativas. Ante dudas, consultanos por WhatsApp y te ayudamos. 💗
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll("[data-guia-open]").forEach((btn) => {
+    const modal = document.querySelector("[data-guia-modal]");
+    if (!modal) return;
+    const abrir = () => {
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+    };
+    const cerrar = () => {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    };
+    btn.addEventListener("click", abrir);
+    modal.querySelector("[data-guia-close]")?.addEventListener("click", cerrar);
+    modal.querySelector("[data-guia-backdrop]")?.addEventListener("click", cerrar);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") cerrar();
+    });
+  });
+</script>

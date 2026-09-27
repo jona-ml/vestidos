@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Princesitas Vestidos — Paleta y tokens de diseño
+   ============================================================ */
+@theme {
+  /* Colores de marca */
+  --color-primary: #de859b;
+  --color-primary-dark: #c96a83;
+  --color-primary-light: #f0b9c7;
+  --color-secondary: #e8b8c2;
+  --color-secondary-light: #f6dfe4;
+  --color-tertiary: #849a88;
+  --color-tertiary-dark: #6b8270;
+  --color-neutral: #faf5f0;
+  --color-neutral-dark: #f1e7dd;
+  --color-ink: #4a3b3f;
+
+  /* Tipografías */
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Sombras suaves de marca */
+  --shadow-soft: 0 10px 40px -12px rgba(222, 133, 155, 0.35);
+  --shadow-card: 0 18px 45px -20px rgba(74, 59, 63, 0.28);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-neutral);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+  }
+}
+
+@layer components {
+  /* Botón principal */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold tracking-wide text-white shadow-soft transition-all duration-300 hover:bg-primary-dark hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* Botón secundario (contorno) */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary px-7 py-3 text-sm font-semibold tracking-wide text-primary transition-all duration-300 hover:bg-primary hover:text-white hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* Botón verde salvia */
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-tertiary px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:bg-tertiary-dark hover:-translate-y-0.5 active:translate-y-0;
+  }
+
+  /* Encabezado de sección */
+  .section-title {
+    @apply font-display text-3xl font-bold leading-tight sm:text-4xl md:text-5xl;
+  }
+
+  .section-eyebrow {
+    @apply mb-3 inline-block text-xs font-semibold uppercase tracking-[0.3em] text-primary;
+  }
+}
+
+/* Animación de aparición al hacer scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

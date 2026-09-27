@@ -1,0 +1,149 @@
+---
+import { config, waLink } from "../data/config";
+
+const enlaces = [
+  { href: "/", label: "Inicio" },
+  { href: "/catalogo", label: "Catálogo" },
+  { href: "/contacto", label: "Contacto" },
+];
+
+const path = Astro.url.pathname;
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 border-b border-secondary/40 bg-neutral/90 backdrop-blur-md transition-shadow duration-300"
+>
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3.5 lg:px-8">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2.5" aria-label={config.marcaCompleta}>
+      <span
+        class="grid h-11 w-11 place-items-center rounded-full bg-primary text-xl text-white shadow-soft"
+        aria-hidden="true">👑</span
+      >
+      <span class="leading-none">
+        <span class="block font-display text-xl font-bold text-primary">{config.marca}</span>
+        <span class="block text-[0.68rem] font-medium uppercase tracking-[0.28em] text-tertiary">
+          Vestidos
+        </span>
+      </span>
+    </a>
+
+    <!-- Navegación escritorio -->
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Navegación principal">
+      {
+        enlaces.map((enlace) => {
+          const activo =
+            enlace.href === "/"
+              ? path === "/"
+              : path.startsWith(enlace.href);
+          return (
+            <a
+              href={enlace.href}
+              class:list={[
+                "relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200",
+                activo
+                  ? "bg-secondary/50 text-primary"
+                  : "text-ink/80 hover:bg-secondary/30 hover:text-primary",
+              ]}
+            >
+              {enlace.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={waLink()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary hidden !px-5 !py-2.5 text-xs sm:inline-flex"
+      >
+        Consultar
+      </a>
+
+      <!-- Botón menú móvil -->
+      <button
+        id="menu-toggle"
+        type="button"
+        class="grid h-11 w-11 place-items-center rounded-full text-ink transition-colors hover:bg-secondary/40 md:hidden"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path class="menu-icon-open" d="M4 7h16M4 12h16M4 17h16"></path>
+          <path class="menu-icon-close hidden" d="M6 6l12 12M18 6L6 18"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú móvil -->
+  <div id="mobile-menu" class="hidden border-t border-secondary/40 bg-neutral md:hidden">
+    <nav class="mx-auto flex max-w-7xl flex-col gap-1 px-5 py-4" aria-label="Navegación móvil">
+      {
+        enlaces.map((enlace) => (
+          <a
+            href={enlace.href}
+            class="rounded-2xl px-4 py-3 text-base font-medium text-ink transition-colors hover:bg-secondary/40 hover:text-primary"
+          >
+            {enlace.label}
+          </a>
+        ))
+      }
+      <a
+        href={waLink()}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary mt-2 w-full"
+      >
+        Consultar por WhatsApp
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const iconOpen = toggle?.querySelector(".menu-icon-open");
+  const iconClose = toggle?.querySelector(".menu-icon-close");
+  const header = document.getElementById("site-header");
+
+  toggle?.addEventListener("click", () => {
+    const abierto = menu?.classList.toggle("hidden") === false;
+    toggle.setAttribute("aria-expanded", String(abierto));
+    toggle.setAttribute("aria-label", abierto ? "Cerrar menú" : "Abrir menú");
+    iconOpen?.classList.toggle("hidden", abierto);
+    iconClose?.classList.toggle("hidden", !abierto);
+  });
+
+  // Cerrar el menú al navegar
+  menu?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => {
+      menu.classList.add("hidden");
+      toggle?.setAttribute("aria-expanded", "false");
+      iconOpen?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
+    })
+  );
+
+  // Sombra sutil al hacer scroll
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle("shadow-soft", window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

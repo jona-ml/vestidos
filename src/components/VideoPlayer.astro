@@ -1,0 +1,65 @@
+---
+interface Props {
+  /** ID del video de YouTube (ej: "aqz-KE-bpKQ"). */
+  videoId: string;
+  titulo?: string;
+}
+const { videoId, titulo = "Video del vestido" } = Astro.props;
+---
+
+<div class="video-facade group relative overflow-hidden rounded-3xl bg-ink ring-1 ring-secondary/40" data-video-id={videoId}>
+  <!-- Respaldo visual si la miniatura no carga -->
+  <div
+    class="absolute inset-0 z-0 grid place-items-center bg-gradient-to-br from-primary via-secondary to-tertiary"
+    aria-hidden="true"
+  >
+  </div>
+
+  <!-- Miniatura de YouTube (carga liviana, sin iframe) -->
+  <img
+    src={`https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`}
+    alt={titulo}
+    loading="lazy"
+    class="relative z-10 aspect-video w-full object-cover opacity-85 transition-opacity duration-300 group-hover:opacity-100"
+    data-video-thumb
+  />
+
+  <!-- Botón de reproducción -->
+  <button
+    type="button"
+    data-video-play
+    aria-label="Reproducir video"
+    class="absolute inset-0 z-20 grid place-items-center"
+  >
+    <span
+      class="grid h-16 w-16 place-items-center rounded-full bg-primary text-white shadow-[0_12px_35px_-8px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-110 sm:h-20 sm:w-20"
+    >
+      <svg class="ml-1 h-7 w-7 sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 5v14l11-7z" />
+      </svg>
+    </span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll("[data-video-id]").forEach((facade) => {
+    const videoId = facade.getAttribute("data-video-id");
+    const thumb = facade.querySelector("[data-video-thumb]");
+    if (thumb) {
+      thumb.addEventListener("error", () => thumb.classList.add("opacity-0"));
+    }
+    facade.querySelector("[data-video-play]")?.addEventListener("click", () => {
+      const iframe = document.createElement("iframe");
+      iframe.className = "absolute inset-0 h-full w-full";
+      iframe.setAttribute(
+        "src",
+        `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`
+      );
+      iframe.setAttribute("title", "Video del vestido");
+      iframe.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
+      iframe.setAttribute("allowfullscreen", "");
+      facade.appendChild(iframe);
+      facade.querySelector("[data-video-play]")?.remove();
+    });
+  });
+</script>

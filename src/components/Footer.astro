@@ -1,0 +1,120 @@
+---
+import { config, waLink } from "../data/config";
+
+const { anio } = Astro.props;
+const redes = [
+  { nombre: "Instagram", href: config.redes.instagram, icono: "instagram" },
+  { nombre: "Facebook", href: config.redes.facebook, icono: "facebook" },
+  { nombre: "TikTok", href: config.redes.tiktok, icono: "tiktok" },
+];
+
+const nav = [
+  { href: "/", label: "Inicio" },
+  { href: "/catalogo", label: "Catálogo" },
+  { href: "/contacto", label: "Contacto" },
+];
+---
+
+<footer class="mt-24 bg-ink text-neutral/90">
+  <div class="mx-auto max-w-7xl px-5 py-14 lg:px-8">
+    <div class="grid gap-10 md:grid-cols-3">
+      <!-- Marca -->
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span
+            class="grid h-10 w-10 place-items-center rounded-full bg-primary text-lg text-white"
+            aria-hidden="true">👑</span
+          >
+          <span class="leading-none">
+            <span class="block font-display text-lg font-bold text-white">{config.marca}</span>
+            <span class="block text-[0.65rem] font-medium uppercase tracking-[0.28em] text-secondary">
+              Vestidos
+            </span>
+          </span>
+        </div>
+        <p class="mt-4 max-w-xs text-sm leading-relaxed text-neutral/70">{config.tagline}</p>
+
+        <div class="mt-5 flex gap-3">
+          {
+            redes.map((red) => (
+              <a
+                href={red.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={red.nombre}
+                class="grid h-10 w-10 place-items-center rounded-full bg-neutral/10 text-neutral transition-colors hover:bg-primary hover:text-white"
+              >
+                {red.icono === "instagram" && (
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                  </svg>
+                )}
+                {red.icono === "facebook" && (
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6c-.29-.04-1.27-.12-2.4-.12-2.38 0-4 1.45-4 4.12v2.3H7.6V13h2.7v8h3.2z" />
+                  </svg>
+                )}
+                {red.icono === "tiktok" && (
+                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16.5 3c.3 1.9 1.5 3.2 3.5 3.4v3c-1.3.1-2.5-.3-3.6-1v6.2c0 3.2-2.5 5.4-5.5 5.4S5.4 17.8 5.4 14.6c0-2.9 2.3-5.1 5.3-5v3.2c-.4-.1-.8-.2-1.2-.2-1.3 0-2.3 1-2.3 2.3s1 2.3 2.3 2.3 2.4-1 2.4-2.4V3h4.6z" />
+                  </svg>
+                )}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Enlaces -->
+      <div>
+        <h3 class="font-display text-lg font-semibold text-white">Explorar</h3>
+        <ul class="mt-4 space-y-2.5 text-sm">
+          {
+            nav.map((enlace) => (
+              <li>
+                <a
+                  href={enlace.href}
+                  class="text-neutral/70 transition-colors hover:text-secondary"
+                >
+                  {enlace.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Contacto -->
+      <div>
+        <h3 class="font-display text-lg font-semibold text-white">Contacto</h3>
+        <ul class="mt-4 space-y-3 text-sm text-neutral/70">
+          <li class="flex items-start gap-2.5">
+            <span aria-hidden="true">📍</span>
+            <span>{config.direccion}</span>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span aria-hidden="true">📞</span>
+            <a href={waLink()} class="transition-colors hover:text-secondary">
+              {config.telefonoVisible}
+            </a>
+          </li>
+          <li class="flex items-start gap-2.5">
+            <span aria-hidden="true">✉️</span>
+            <a href={`mailto:${config.email}`} class="transition-colors hover:text-secondary">
+              {config.email}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-neutral/15 pt-6 text-xs text-neutral/60 sm:flex-row"
+    >
+      <p>© {anio} {config.marcaCompleta}. Todos los derechos reservados.</p>
+      <p>Hecho con 💗 para las pequeñas princesas.</p>
+    </div>
+  </div>
+</footer>

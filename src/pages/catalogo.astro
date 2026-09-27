@@ -1,0 +1,221 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { productos, categorias, tallasDisponibles } from "../data/productos";
+import { waLink } from "../data/config";
+---
+
+<Layout
+  title="Catálogo de vestidos | Princesitas Vestidos"
+  description="Explorá todo nuestro catálogo de vestidos de niñas: fiesta, princesa, casual y temporada. Consultá por WhatsApp."
+>
+  <!-- Encabezado -->
+  <section class="relative overflow-hidden bg-secondary/35">
+    <div
+      class="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-secondary/60 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative mx-auto max-w-7xl px-5 py-14 text-center lg:px-8 lg:py-20">
+      <span class="section-eyebrow">Catálogo</span>
+      <h1 class="section-title">Todos nuestros vestidos</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-ink/70">
+        Filtrá por colección o talle y encontrá el vestido perfecto.
+        ¿Tenés dudas? Consultanos por WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+    <!-- Filtros -->
+    <div class="flex flex-col gap-6">
+      <div>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-tertiary">
+          Colección
+        </p>
+        <div id="filtros-categoria" class="flex flex-wrap gap-2.5">
+          <button
+            type="button"
+            data-categoria="todas"
+            class="filtro-chip is-active rounded-full border-2 border-primary bg-primary px-5 py-2 text-sm font-semibold text-white transition-all duration-200"
+          >
+            Todas
+          </button>
+          {
+            categorias.map((cat) => (
+              <button
+                type="button"
+                data-categoria={cat.slug}
+                class="filtro-chip rounded-full border-2 border-secondary bg-white px-5 py-2 text-sm font-semibold text-ink/75 transition-all duration-200 hover:border-primary hover:text-primary"
+              >
+                {cat.icono} {cat.nombre}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-tertiary">
+          Talle
+        </p>
+        <div id="filtros-talla" class="flex flex-wrap gap-2.5">
+          <button
+            type="button"
+            data-talla="todas"
+            class="filtro-talla-chip is-active rounded-full border-2 border-tertiary bg-tertiary px-5 py-2 text-sm font-semibold text-white transition-all duration-200"
+          >
+            Todos
+          </button>
+          {
+            tallasDisponibles.map((talla) => (
+              <button
+                type="button"
+                data-talla={talla}
+                class="filtro-talla-chip rounded-full border-2 border-secondary bg-white px-5 py-2 text-sm font-semibold text-ink/75 transition-all duration-200 hover:border-tertiary hover:text-tertiary"
+              >
+                T{talla}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Contador -->
+    <p id="contador" class="mt-8 text-sm text-ink/55" aria-live="polite">
+      Mostrando {productos.length} vestidos
+    </p>
+
+    <!-- Grilla de productos -->
+    <div id="grilla" class="mt-6 grid gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {
+        productos.map((producto, i) => (
+          <div
+            class="producto-item reveal"
+            data-categoria={producto.categoria}
+            data-tallas={producto.tallas.join(",")}
+            style={`transition-delay: ${(i % 4) * 60}ms`}
+          >
+            <ProductCard producto={producto} />
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Sin resultados -->
+    <div id="sin-resultados" class="hidden py-20 text-center">
+      <span class="text-5xl" aria-hidden="true">🔍</span>
+      <h2 class="mt-4 font-display text-2xl font-bold text-ink">
+        No encontramos vestidos con esos filtros
+      </h2>
+      <p class="mt-2 text-ink/65">Probá con otra combinación o consultanos directamente.</p>
+      <button id="limpiar-filtros" type="button" class="btn-outline mt-6">
+        Limpiar filtros
+      </button>
+    </div>
+
+    <!-- CTA inferior -->
+    <div class="mt-16 rounded-3xl bg-secondary-light/60 px-8 py-10 text-center">
+      <h2 class="font-display text-2xl font-bold text-ink">
+        ¿No encontrás el modelo que buscás?
+      </h2>
+      <p class="mx-auto mt-2 max-w-xl text-ink/65">
+        Trabajamos con pedidos especiales. Contanos qué vestido soñás y lo hacemos realidad.
+      </p>
+      <a
+        href={waLink("¡Hola Princesitas! 👑 Busco un vestido especial que no vi en el catálogo.")}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-primary mt-6"
+      >
+        Consultar por WhatsApp
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const CAT_CHIP_ACTIVE = ["border-primary", "bg-primary", "text-white"];
+  const CAT_CHIP_IDLE = ["border-secondary", "bg-white", "text-ink/75"];
+  const TALLA_CHIP_ACTIVE = ["border-tertiary", "bg-tertiary", "text-white"];
+  const TALLA_CHIP_IDLE = ["border-secondary", "bg-white", "text-ink/75"];
+
+  const items = Array.from(document.querySelectorAll(".producto-item"));
+  const catChips = Array.from(
+    document.querySelectorAll("#filtros-categoria .filtro-chip")
+  );
+  const tallaChips = Array.from(
+    document.querySelectorAll("#filtros-talla .filtro-talla-chip")
+  );
+  const contador = document.getElementById("contador");
+  const sinResultados = document.getElementById("sin-resultados");
+  const limpiar = document.getElementById("limpiar-filtros");
+
+  let categoriaActiva = "todas";
+  let tallaActiva = "todas";
+
+  function setChipState(chip, activo, activeClasses, idleClasses) {
+    chip.classList.remove(...activeClasses, ...idleClasses);
+    chip.classList.add(...(activo ? activeClasses : idleClasses));
+  }
+
+  function aplicar() {
+    let visibles = 0;
+
+    items.forEach((item) => {
+      const cat = item.dataset.categoria ?? "";
+      const tallas = (item.dataset.tallas ?? "").split(",");
+
+      const okCat = categoriaActiva === "todas" || cat === categoriaActiva;
+      const okTalla = tallaActiva === "todas" || tallas.includes(tallaActiva);
+
+      const mostrar = okCat && okTalla;
+      item.classList.toggle("hidden", !mostrar);
+      if (mostrar) visibles++;
+    });
+
+    if (contador) {
+      contador.textContent = visibles === 1
+        ? "Mostrando 1 vestido"
+        : `Mostrando ${visibles} vestidos`;
+    }
+    sinResultados?.classList.toggle("hidden", visibles !== 0);
+  }
+
+  function activarCategoria(slug: string) {
+    categoriaActiva = slug;
+    catChips.forEach((chip) =>
+      setChipState(chip, chip.dataset.categoria === slug, CAT_CHIP_ACTIVE, CAT_CHIP_IDLE)
+    );
+    aplicar();
+  }
+
+  function activarTalla(talla: string) {
+    tallaActiva = talla;
+    tallaChips.forEach((chip) =>
+      setChipState(chip, chip.dataset.talla === talla, TALLA_CHIP_ACTIVE, TALLA_CHIP_IDLE)
+    );
+    aplicar();
+  }
+
+  catChips.forEach((chip) =>
+    chip.addEventListener("click", () => activarCategoria(chip.dataset.categoria ?? "todas"))
+  );
+  tallaChips.forEach((chip) =>
+    chip.addEventListener("click", () => activarTalla(chip.dataset.talla ?? "todas"))
+  );
+  limpiar?.addEventListener("click", () => {
+    activarCategoria("todas");
+    activarTalla("todas");
+  });
+
+  // Aplicar filtro que venga por la URL: /catalogo?categoria=fiesta
+  const params = new URLSearchParams(window.location.search);
+  const catUrl = params.get("categoria");
+  if (catUrl && catChips.some((c) => c.dataset.categoria === catUrl)) {
+    activarCategoria(catUrl);
+  } else {
+    aplicar();
+  }
+</script>

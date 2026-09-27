@@ -1,0 +1,42 @@
+---
+import { categorias } from "../data/productos";
+---
+
+<section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+  <div class="reveal mx-auto max-w-2xl text-center">
+    <span class="section-eyebrow">Colecciones</span>
+    <h2 class="section-title">Elegí su estilo favorito</h2>
+    <p class="mt-4 text-ink/65">
+      Cada ocasión merece un vestido especial. Encontrá el look perfecto para tu princesa.
+    </p>
+  </div>
+
+  <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      categorias.map((cat, i) => (
+        <a
+          href={`/catalogo?categoria=${cat.slug}`}
+          class="reveal group relative overflow-hidden rounded-3xl bg-white p-7 text-center ring-1 ring-secondary/40 transition-all duration-300 hover:-translate-y-1.5 hover:bg-primary hover:shadow-card"
+          style={`transition-delay: ${i * 60}ms`}
+        >
+          <span
+            class="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-secondary/40 text-3xl transition-colors duration-300 group-hover:bg-white/25"
+            aria-hidden="true"
+          >
+            {cat.icono}
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink transition-colors duration-300 group-hover:text-white">
+            {cat.nombre}
+          </h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink/65 transition-colors duration-300 group-hover:text-white/85">
+            {cat.descripcion}
+          </p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors duration-300 group-hover:text-white">
+            Ver vestidos
+            <span class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">→</span>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,68 @@
+---
+const testimonios = [
+  {
+    nombre: "María G.",
+    ciudad: "Buenos Aires",
+    texto:
+      "¡Hermoso! El vestido es igual a las fotos y la tela es súper suave. Mi hija no se lo quiere sacar.",
+    inicial: "M",
+  },
+  {
+    nombre: "Laura P.",
+    ciudad: "Córdoba",
+    texto:
+      "La atención por WhatsApp fue excelente, me ayudaron a elegir el talle. Llegó rapidísimo.",
+    inicial: "L",
+  },
+  {
+    nombre: "Carolina R.",
+    ciudad: "Rosario",
+    texto:
+      "Compré para el cumple de mi nena y fue la más linda de la fiesta. ¡Súper recomendados!",
+    inicial: "C",
+  },
+];
+---
+
+<section class="relative overflow-hidden py-16 lg:py-20">
+  <div class="pointer-events-none absolute inset-0 bg-secondary/30" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <span class="section-eyebrow">Testimonios</span>
+      <h2 class="section-title">Princesas felices</h2>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {
+        testimonios.map((t, i) => (
+          <figure
+            class="reveal flex h-full flex-col rounded-3xl bg-white p-7 shadow-[0_10px_30px_-20px_rgba(74,59,63,0.35)]"
+            style={`transition-delay: ${i * 70}ms`}
+          >
+            <div class="flex gap-0.5 text-primary" aria-label="5 de 5 estrellas">
+              {Array.from({ length: 5 }).map(() => (
+                <span aria-hidden="true">★</span>
+              ))}
+            </div>
+            <blockquote class="mt-4 flex-1 text-sm leading-relaxed text-ink/75">
+              “{t.texto}”
+            </blockquote>
+            <figcaption class="mt-5 flex items-center gap-3 border-t border-secondary/40 pt-5">
+              <span
+                class="grid h-11 w-11 place-items-center rounded-full bg-secondary/50 font-display text-lg font-bold text-primary"
+                aria-hidden="true"
+              >
+                {t.inicial}
+              </span>
+              <span class="leading-tight">
+                <span class="block text-sm font-semibold text-ink">{t.nombre}</span>
+                <span class="block text-xs text-ink/55">{t.ciudad}</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

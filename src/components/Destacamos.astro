@@ -1,0 +1,51 @@
+---
+const ventajas = [
+  {
+    icono: "🌿",
+    titulo: "Telas suaves y seguras",
+    texto: "Materiales hipoalergénicos y cómodos, cuidados para la piel de las más chicas.",
+  },
+  {
+    icono: "✂️",
+    titulo: "Diseño artesanal",
+    texto: "Cada vestido está confeccionado a mano con atención a cada detalle.",
+  },
+  {
+    icono: "🚚",
+    titulo: "Envíos a todo el país",
+    texto: "Despachamos en 24 h y llegan envueltos como un regalo.",
+  },
+  {
+    icono: "💗",
+    titulo: "Atención personalizada",
+    texto: "Te ayudamos a elegir el talle y el modelo ideal por WhatsApp.",
+  },
+];
+---
+
+<section class="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-20">
+  <div class="reveal mx-auto max-w-2xl text-center">
+    <span class="section-eyebrow">Por qué elegirnos</span>
+    <h2 class="section-title">Hechos con amor, pensados para ellas</h2>
+  </div>
+
+  <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      ventajas.map((v, i) => (
+        <div
+          class="reveal rounded-3xl bg-white p-7 ring-1 ring-secondary/40 transition-shadow duration-300 hover:shadow-soft"
+          style={`transition-delay: ${i * 60}ms`}
+        >
+          <span
+            class="grid h-14 w-14 place-items-center rounded-2xl bg-tertiary/12 text-2xl"
+            aria-hidden="true"
+          >
+            {v.icono}
+          </span>
+          <h3 class="mt-5 font-display text-lg font-bold text-ink">{v.titulo}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink/65">{v.texto}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>

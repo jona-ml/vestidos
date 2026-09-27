@@ -1,0 +1,114 @@
+---
+import { config, waLink } from "../data/config";
+---
+
+<section class="relative overflow-hidden bg-neutral">
+  <!-- Fondos decorativos -->
+  <div
+    class="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-secondary/50 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-secondary-light blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 lg:grid-cols-2 lg:gap-8 lg:px-8 lg:py-24">
+    <!-- Texto -->
+    <div class="reveal text-center lg:text-left">
+      <span
+        class="inline-flex items-center gap-2 rounded-full border border-secondary bg-white/70 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-primary backdrop-blur"
+      >
+        👑 Nueva colección
+      </span>
+
+      <h1 class="mt-6 font-display text-4xl font-extrabold leading-[1.1] text-ink sm:text-5xl lg:text-6xl">
+        Vestidos de ensueño para
+        <span class="relative whitespace-nowrap text-primary">
+          tus princesas
+          <svg
+            class="absolute -bottom-2 left-0 h-3 w-full text-secondary"
+            viewBox="0 0 200 12"
+            fill="none"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d="M2 9c40-6 100-8 196-3" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+          </svg>
+        </span>
+      </h1>
+
+      <p class="mx-auto mt-7 max-w-lg text-lg leading-relaxed text-ink/70 lg:mx-0">
+        {config.tagline}. Descubrí nuestra colección de vestidos de fiesta, princesa
+        y casual, pensados con telas suaves y detalles mágicos.
+      </p>
+
+      <div class="mt-9 flex flex-wrap justify-center gap-3.5 lg:justify-start">
+        <a href="/catalogo" class="btn-primary">
+          Ver catálogo
+          <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href={waLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-outline"
+        >
+          Consultar por WhatsApp
+        </a>
+      </div>
+
+      <!-- Métricas -->
+      <dl class="mt-12 grid max-w-md grid-cols-3 gap-4 lg:mx-0">
+        <div class="mx-auto text-center lg:mx-0 lg:text-left">
+          <dt class="font-display text-3xl font-bold text-primary">+500</dt>
+          <dd class="text-xs font-medium uppercase tracking-wider text-ink/60">Clientas felices</dd>
+        </div>
+        <div class="mx-auto text-center lg:mx-0 lg:text-left">
+          <dt class="font-display text-3xl font-bold text-primary">+120</dt>
+          <dd class="text-xs font-medium uppercase tracking-wider text-ink/60">Modelos</dd>
+        </div>
+        <div class="mx-auto text-center lg:mx-0 lg:text-left">
+          <dt class="font-display text-3xl font-bold text-primary">4.9★</dt>
+          <dd class="text-xs font-medium uppercase tracking-wider text-ink/60">Valoración</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Imagen -->
+    <div class="reveal relative">
+      <div class="relative mx-auto max-w-md">
+        <div
+          class="absolute inset-0 -rotate-6 rounded-[2.5rem] bg-secondary/70"
+          aria-hidden="true"
+        >
+        </div>
+        <div
+          class="absolute inset-0 rotate-3 rounded-[2.5rem] border-2 border-tertiary/30"
+          aria-hidden="true"
+        >
+        </div>
+        <img
+          src="https://picsum.photos/seed/princesitahero/800/1000"
+          alt="Niña con un hermoso vestido de Princesitas Vestidos"
+          class="relative aspect-[4/5] w-full rounded-[2.5rem] object-cover shadow-card"
+        />
+
+        <!-- Tarjeta flotante -->
+        <div
+          class="absolute -bottom-6 -left-4 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-card backdrop-blur sm:-left-8"
+        >
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-tertiary/15 text-lg" aria-hidden="true">
+            🚚
+          </span>
+          <div class="leading-tight">
+            <p class="text-sm font-semibold text-ink">Envío a todo el país</p>
+            <p class="text-xs text-ink/60">Rápido y seguro</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,156 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { config, waLink } from "../data/config";
+---
+
+<Layout
+  title="Contacto | Princesitas Vestidos"
+  description="Escribinos por WhatsApp, consultá por talles y modelos, o visitanos en nuestro local. Princesitas Vestidos."
+>
+  <!-- Encabezado -->
+  <section class="relative overflow-hidden bg-secondary/35">
+    <div
+      class="pointer-events-none absolute -left-20 -top-24 h-72 w-72 rounded-full bg-secondary/60 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative mx-auto max-w-7xl px-5 py-14 text-center lg:px-8 lg:py-20">
+      <span class="section-eyebrow">Contacto</span>
+      <h1 class="section-title">Estamos para ayudarte</h1>
+      <p class="mx-auto mt-4 max-w-2xl text-ink/70">
+        Contanos qué buscás y te asesoramos para elegir el vestido perfecto.
+        Respondemos en minutos por WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
+    <div class="grid gap-8 lg:grid-cols-2">
+      <!-- Datos de contacto -->
+      <div class="reveal space-y-5">
+        <a
+          href={waLink()}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-start gap-4 rounded-3xl bg-white p-6 ring-1 ring-secondary/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-soft"
+        >
+          <span
+            class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[#25D366]/12 text-2xl"
+            aria-hidden="true">💬</span
+          >
+          <span>
+            <span class="block font-display text-lg font-bold text-ink">WhatsApp</span>
+            <span class="mt-1 block text-sm text-ink/65">
+              La forma más rápida de consultar. {config.telefonoVisible}
+            </span>
+            <span class="mt-2 inline-block text-sm font-semibold text-primary">
+              Escribir ahora →
+            </span>
+          </span>
+        </a>
+
+        <a
+          href={`mailto:${config.email}`}
+          class="flex items-start gap-4 rounded-3xl bg-white p-6 ring-1 ring-secondary/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-soft"
+        >
+          <span
+            class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-tertiary/12 text-2xl"
+            aria-hidden="true">✉️</span
+          >
+          <span>
+            <span class="block font-display text-lg font-bold text-ink">Email</span>
+            <span class="mt-1 block text-sm text-ink/65">{config.email}</span>
+            <span class="mt-2 inline-block text-sm font-semibold text-primary">Escribir →</span>
+          </span>
+        </a>
+
+        <div class="flex items-start gap-4 rounded-3xl bg-white p-6 ring-1 ring-secondary/40">
+          <span
+            class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-secondary/40 text-2xl"
+            aria-hidden="true">📍</span
+          >
+          <div>
+            <span class="block font-display text-lg font-bold text-ink">Nuestro local</span>
+            <span class="mt-1 block text-sm text-ink/65">{config.direccion}</span>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 ring-1 ring-secondary/40">
+          <div class="flex items-center gap-4">
+            <span
+              class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-primary/10 text-2xl"
+              aria-hidden="true">🕐</span
+            >
+            <span class="font-display text-lg font-bold text-ink">Horarios de atención</span>
+          </div>
+          <ul class="mt-4 space-y-2.5 border-t border-secondary/40 pt-4 text-sm">
+            {
+              config.horarios.map((h) => (
+                <li class="flex items-center justify-between gap-4">
+                  <span class="text-ink/70">{h.dia}</span>
+                  <span class="font-semibold text-ink">{h.hora}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- CTA grande -->
+      <div class="reveal">
+        <div
+          class="relative flex h-full flex-col justify-center overflow-hidden rounded-[2.5rem] bg-primary px-8 py-12 text-center shadow-card sm:px-12"
+        >
+          <div
+            class="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10"
+            aria-hidden="true"
+          >
+          </div>
+          <div
+            class="pointer-events-none absolute -bottom-20 -left-12 h-56 w-56 rounded-full bg-tertiary/25"
+            aria-hidden="true"
+          >
+          </div>
+
+          <div class="relative">
+            <span class="text-5xl" aria-hidden="true">👗</span>
+            <h2 class="mt-5 font-display text-3xl font-bold text-white">
+              Hablemos de su próximo vestido
+            </h2>
+            <p class="mx-auto mt-4 max-w-md text-white/90">
+              Decinos la edad de tu princesa, la ocasión y el estilo que buscás.
+              Te enviamos opciones con fotos y precios.
+            </p>
+
+            <ul class="mx-auto mt-7 max-w-sm space-y-2.5 text-left text-sm text-white/90">
+              <li class="flex items-center gap-3">
+                <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20" aria-hidden="true">✓</span>
+                Asesoramiento de talles sin cargo
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20" aria-hidden="true">✓</span>
+                Fotos reales de cada modelo
+              </li>
+              <li class="flex items-center gap-3">
+                <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-white/20" aria-hidden="true">✓</span>
+                Envíos a todo el país
+              </li>
+            </ul>
+
+            <a
+              href={waLink("¡Hola Princesitas! 👑 Quisiera asesoramiento para elegir un vestido.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-primary transition-transform duration-300 hover:-translate-y-0.5"
+            >
+              Iniciar consulta por WhatsApp
+              <span aria-hidden="true">→</span>
+            </a>
+
+            <p class="mt-5 text-xs text-white/70">Horario de respuesta: Lun a Sáb de 10 a 19 h</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,289 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import GaleriaProducto from "../../components/GaleriaProducto.astro";
+import VideoPlayer from "../../components/VideoPlayer.astro";
+import GuiaTallas from "../../components/GuiaTallas.astro";
+import ProductCard from "../../components/ProductCard.astro";
+import {
+  productos,
+  categorias,
+  formatoPrecio,
+  type Producto,
+} from "../../data/productos";
+import { config, waLink } from "../../data/config";
+
+export function getStaticPaths() {
+  return productos.map((producto) => ({
+    params: { id: producto.id },
+    props: { producto },
+  }));
+}
+
+interface Props {
+  producto: Producto;
+}
+const { producto } = Astro.props;
+
+const categoria = categorias.find((c) => c.slug === producto.categoria);
+const relacionados = productos
+  .filter((p) => p.categoria === producto.categoria && p.id !== producto.id)
+  .slice(0, 4);
+
+const badges = [
+  ...(producto.nuevo ? [{ texto: "Nuevo", clase: "bg-tertiary" }] : []),
+  ...(producto.destacado ? [{ texto: "Destacado", clase: "bg-primary" }] : []),
+];
+
+const detalles = [
+  { etiqueta: "Tela", valor: producto.detalles.tela },
+  { etiqueta: "Forro", valor: producto.detalles.forro },
+  { etiqueta: "Cierre", valor: producto.detalles.cierre },
+  { etiqueta: "Cuidados", valor: producto.detalles.cuidados },
+  { etiqueta: "Origen", valor: producto.detalles.origen },
+];
+---
+
+<Layout
+  title={`${producto.nombre} | Princesitas Vestidos`}
+  description={producto.descripcion}
+>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: producto.nombre,
+    description: producto.descripcion,
+    image: producto.galeria,
+    brand: { "@type": "Brand", name: "Princesitas Vestidos" },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "ARS",
+      price: producto.precio,
+      availability: "https://schema.org/InStock",
+    },
+  })} />
+
+  <div class="mx-auto max-w-7xl px-5 py-8 lg:px-8 lg:py-12">
+    <!-- Breadcrumb -->
+    <nav class="flex flex-wrap items-center gap-2 text-sm text-ink/55" aria-label="Ruta de navegación">
+      <a href="/" class="transition-colors hover:text-primary">Inicio</a>
+      <span aria-hidden="true">/</span>
+      <a href="/catalogo" class="transition-colors hover:text-primary">Catálogo</a>
+      {
+        categoria && (
+          <>
+            <span aria-hidden="true">/</span>
+            <a
+              href={`/catalogo?categoria=${categoria.slug}`}
+              class="transition-colors hover:text-primary"
+            >
+              {categoria.nombre}
+            </a>
+          </>
+        )
+      }
+      <span aria-hidden="true">/</span>
+      <span class="font-medium text-ink">{producto.nombre}</span>
+    </nav>
+
+    <!-- Producto -->
+    <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-14">
+      <!-- Galería -->
+      <div class="reveal lg:sticky lg:top-24 lg:self-start">
+        <GaleriaProducto imagenes={producto.galeria} alt={producto.nombre} badges={badges} />
+
+        {
+          producto.video && (
+            <div class="mt-8">
+              <p class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] text-tertiary">
+                <span aria-hidden="true">🎬</span> Video del vestido
+              </p>
+              <VideoPlayer videoId={producto.video} titulo={`Video: ${producto.nombre}`} />
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Información -->
+      <div class="reveal">
+        <span class="text-xs font-semibold uppercase tracking-[0.28em] text-tertiary">
+          {categoria?.nombre ?? "Colección"}
+        </span>
+        <h1
+          data-nombre={producto.nombre}
+          class="mt-2 font-display text-3xl font-extrabold leading-tight text-ink sm:text-4xl"
+        >
+          {producto.nombre}
+        </h1>
+
+        <p data-precio={formatoPrecio(producto.precio)} class="mt-4 font-display text-3xl font-bold text-primary">
+          {formatoPrecio(producto.precio)}
+        </p>
+
+        <p class="mt-5 leading-relaxed text-ink/75">{producto.descripcionLarga}</p>
+
+        <!-- Colores -->
+        <div class="mt-7">
+          <p class="text-sm font-semibold text-ink">
+            Colores disponibles
+          </p>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            {
+              producto.colores.map((c) => (
+                <span class="inline-flex items-center gap-2 rounded-full border border-secondary bg-white px-3.5 py-1.5 text-sm text-ink/80">
+                  <span
+                    class="h-4 w-4 rounded-full ring-1 ring-ink/10"
+                    style={`background-color: ${c.hex}`}
+                    aria-hidden="true"
+                  />
+                  {c.nombre}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Talle -->
+        <div class="mt-7">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <p class="text-sm font-semibold text-ink">
+              Elegí el talle
+              <span id="talle-elegido" class="ml-1 font-normal text-ink/50"></span>
+            </p>
+            <GuiaTallas />
+          </div>
+          <div id="selector-talle" class="mt-3 flex flex-wrap gap-2.5">
+            {
+              producto.tallas.map((talla) => (
+                <button
+                  type="button"
+                  data-talle={talla}
+                  class="talle-chip rounded-full border-2 border-secondary bg-white px-5 py-2 text-sm font-semibold text-ink/75 transition-all duration-200 hover:border-primary hover:text-primary"
+                >
+                  T{talla}
+                </button>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a
+            id="cta-whatsapp"
+            data-numero={config.whatsapp}
+            data-nombre={producto.nombre}
+            data-precio={formatoPrecio(producto.precio)}
+            href={waLink(
+              `¡Hola Princesitas! 👑 Me interesa el "${producto.nombre}" (${formatoPrecio(
+                producto.precio
+              )}). ¿Está disponible?`
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-primary flex-1"
+          >
+            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.97L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.8 14.09c-.25.69-1.45 1.32-2 1.4-.51.08-1.16.11-1.87-.12-.43-.14-.98-.32-1.69-.62-2.98-1.29-4.92-4.29-5.07-4.49-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37.2 0 .39 0 .56.01.18.01.42-.07.66.5.25.6.84 2.06.92 2.21.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.38-.44.51-.15.15-.3.31-.13.61.17.3.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.36 1.46.3.15.47.12.65-.07.17-.2.75-.87.94-1.17.2-.3.39-.25.66-.15.27.1 1.72.81 2.01.96.3.15.5.22.57.35.07.12.07.72-.18 1.41z" />
+            </svg>
+            Consultar disponibilidad
+          </a>
+          <a href="/catalogo" class="btn-outline">Seguir mirando</a>
+        </div>
+
+        <!-- Beneficios -->
+        <ul class="mt-7 grid gap-3 rounded-3xl bg-secondary-light/60 p-5 text-sm sm:grid-cols-2">
+          <li class="flex items-center gap-2.5 text-ink/80">
+            <span aria-hidden="true">🚚</span> Envíos a todo el país
+          </li>
+          <li class="flex items-center gap-2.5 text-ink/80">
+            <span aria-hidden="true">🔄</span> Cambios sin cargo
+          </li>
+          <li class="flex items-center gap-2.5 text-ink/80">
+            <span aria-hidden="true">🧵</span> Confección artesanal
+          </li>
+          <li class="flex items-center gap-2.5 text-ink/80">
+            <span aria-hidden="true">💗</span> Asesoría de talles
+          </li>
+        </ul>
+
+        <!-- Detalles -->
+        <div class="mt-8">
+          <h2 class="font-display text-xl font-bold text-ink">Detalles del vestido</h2>
+          <dl class="mt-4 divide-y divide-secondary/40 overflow-hidden rounded-3xl bg-white ring-1 ring-secondary/40">
+            {
+              detalles.map((d) => (
+                <div class="grid grid-cols-3 gap-4 px-5 py-4">
+                  <dt class="text-sm font-semibold text-ink/70">{d.etiqueta}</dt>
+                  <dd class="col-span-2 text-sm text-ink/80">{d.valor}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Relacionados -->
+    {
+      relacionados.length > 0 && (
+        <section class="mt-20">
+          <div class="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+            <div>
+              <span class="section-eyebrow">También te puede gustar</span>
+              <h2 class="font-display text-2xl font-bold text-ink sm:text-3xl">
+                Más vestidos de {categoria?.nombre}
+              </h2>
+            </div>
+            <a href={`/catalogo?categoria=${producto.categoria}`} class="btn-outline shrink-0">
+              Ver colección
+            </a>
+          </div>
+
+          <div class="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+            {relacionados.map((p, i) => (
+              <div class="reveal" style={`transition-delay: ${i * 60}ms`}>
+                <ProductCard producto={p} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Layout>
+
+<script>
+  const cta = document.getElementById("cta-whatsapp");
+  const etiqueta = document.getElementById("talle-elegido");
+  const chips = Array.from(document.querySelectorAll(".talle-chip"));
+
+  const ACTIVO = ["border-primary", "bg-primary", "text-white"];
+  const INACTIVO = ["border-secondary", "bg-white", "text-ink/75"];
+
+  function mensaje(talle) {
+    if (!cta) return "";
+    const nombre = cta.dataset.nombre ?? "el vestido";
+    const precio = cta.dataset.precio ?? "";
+    const base = `¡Hola Princesitas! 👑 Me interesa el "${nombre}" (${precio})`;
+    return talle
+      ? `${base}, talle ${talle}. ¿Está disponible?`
+      : `${base}. ¿Está disponible?`;
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const talle = chip.dataset.talle;
+      chips.forEach((c) => {
+        c.classList.remove(...ACTIVO, ...INACTIVO);
+        c.classList.add(...(c === chip ? ACTIVO : INACTIVO));
+      });
+      if (etiqueta) etiqueta.textContent = `· Talle ${talle}`;
+      if (cta) {
+        cta.setAttribute(
+          "href",
+          `https://wa.me/${cta.dataset.numero ?? ""}?text=${encodeURIComponent(mensaje(talle))}`
+        );
+      }
+    });
+  });
+</script>

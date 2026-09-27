@@ -1,0 +1,141 @@
+---
+interface Props {
+  imagenes: string[];
+  alt: string;
+  badges?: { texto: string; clase: string }[];
+}
+const { imagenes, alt, badges = [] } = Astro.props;
+const principal = imagenes[0];
+---
+
+<div class="galeria" data-galeria>
+  <!-- Imagen principal -->
+  <div class="relative overflow-hidden rounded-3xl bg-secondary-light ring-1 ring-secondary/40">
+    <img
+      data-imagen-principal
+      src={principal}
+      alt={alt}
+      class="aspect-[4/5] w-full object-cover transition-opacity duration-300"
+    />
+
+    {
+      badges.length > 0 && (
+        <div class="absolute left-4 top-4 flex flex-col gap-2">
+          {badges.map((b) => (
+            <span
+              class={`rounded-full px-3.5 py-1.5 text-[0.7rem] font-semibold uppercase tracking-wider text-white shadow-sm ${b.clase}`}
+            >
+              {b.texto}
+            </span>
+          ))}
+        </div>
+      )
+    }
+
+    <!-- Flechas (móvil/escritorio) -->
+    <button
+      type="button"
+      data-galeria-prev
+      aria-label="Imagen anterior"
+      class="absolute left-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-ink shadow-md backdrop-blur transition-colors hover:bg-white"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </button>
+    <button
+      type="button"
+      data-galeria-next
+      aria-label="Imagen siguiente"
+      class="absolute right-3 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-ink shadow-md backdrop-blur transition-colors hover:bg-white"
+    >
+      <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <path d="M9 6l6 6-6 6"></path>
+      </svg>
+    </button>
+
+    <!-- Contador -->
+    <span
+      data-galeria-contador
+      class="absolute bottom-4 right-4 rounded-full bg-ink/60 px-3 py-1 text-xs font-medium text-white backdrop-blur"
+    >
+      1 / {imagenes.length}
+    </span>
+  </div>
+
+  <!-- Miniaturas -->
+  {
+    imagenes.length > 1 && (
+      <div class="mt-4 grid grid-cols-4 gap-3">
+        {imagenes.map((img, i) => (
+          <button
+            type="button"
+            data-galeria-thumb
+            data-index={i}
+            aria-label={`Ver imagen ${i + 1}`}
+            class:list={[
+              "overflow-hidden rounded-2xl ring-2 transition-all duration-200",
+              i === 0
+                ? "ring-primary"
+                : "ring-secondary/40 opacity-70 hover:opacity-100 hover:ring-secondary",
+            ]}
+          >
+            <img
+              src={img}
+              alt={`${alt} — vista ${i + 1}`}
+              loading="lazy"
+              class="aspect-square w-full object-cover"
+            />
+          </button>
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<script>
+  document.querySelectorAll("[data-galeria]").forEach((galeria) => {
+    const principal = galeria.querySelector("[data-imagen-principal]");
+    const thumbs = Array.from(galeria.querySelectorAll("[data-galeria-thumb]"));
+    const contador = galeria.querySelector("[data-galeria-contador]");
+    const imagenes = thumbs.map((t) => t.querySelector("img")?.getAttribute("src"));
+    const altBase =
+      principal?.getAttribute("alt") ?? "Vestido";
+    let actual = 0;
+
+    const ACTIVE = ["ring-primary"];
+    const IDLE = ["ring-secondary/40", "opacity-70", "hover:opacity-100", "hover:ring-secondary"];
+
+    function pintar() {
+      if (principal && imagenes[actual]) {
+        principal.setAttribute("src", imagenes[actual]);
+        principal.setAttribute("alt", `${altBase} — vista ${actual + 1}`);
+      }
+      thumbs.forEach((t, i) => {
+        t.classList.remove(...ACTIVE, ...IDLE);
+        t.classList.add(...(i === actual ? ACTIVE : IDLE));
+      });
+      if (contador) contador.textContent = `${actual + 1} / ${imagenes.length}`;
+    }
+
+    function ir(delta) {
+      actual = (actual + delta + imagenes.length) % imagenes.length;
+      pintar();
+    }
+
+    thumbs.forEach((t) =>
+      t.addEventListener("click", () => {
+        actual = Number(t.dataset.index ?? 0);
+        pintar();
+      })
+    );
+    galeria.querySelector("[data-galeria-prev]")?.addEventListener("click", () => ir(-1));
+    galeria.querySelector("[data-galeria-next]")?.addEventListener("click", () => ir(1));
+
+    // Navegación con teclado
+    galeria.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") ir(-1);
+      if (e.key === "ArrowRight") ir(1);
+    });
+  });
+</script>
